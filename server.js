@@ -6,13 +6,14 @@ import session from 'express-session'
 import passport from 'passport'
 import { connectDB } from './config/database.js'
 import MongoStore from 'connect-mongo'
+import authRouter from './routes/auth.js'
 
 const app = express()
 dotenv.config()
 
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -25,34 +26,34 @@ app.use(session({
     },
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
-        ttl: 24 * 60 * 60 * 1000 
+        ttl: 24 * 60 * 60 * 1000
     })
 }))
 
 app.use(passport.initialize())
 app.use(passport.session())
-
-app.get('/', (req, res)=>{
+app.use('/api/auth', authRouter)
+app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
-const startServer = async()=>{
-    try{
+const startServer = async () => {
+    try {
         await connectDB()
-        app.listen(5000, ()=>{
+        app.listen(5000, () => {
             console.log(`Server running on port 5000`)
         })
-    }catch(err){
+    } catch (err) {
         console.error(err)
     }
 }
 
 startServer()
 
-mongoose.connection.on('connected', ()=>{
+mongoose.connection.on('connected', () => {
     console.log('MongoDB connected')
 })
 
-mongoose.connection.on('disconnected', (err)=>{
+mongoose.connection.on('disconnected', (err) => {
     console.error('MongoDB disconnected')
 })
