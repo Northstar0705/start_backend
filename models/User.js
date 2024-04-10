@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    role:{
+        type: String,
+        default: "mentee"
+    }
 },{timestamps: true})
 
 export default mongoose.model("User", userSchema);
