@@ -55,13 +55,13 @@ const mentorSchema = new Schema({
     introVideo:{
         type : String
     },
-    articles:{
+    article:{
         type : String
     },
     whyMentor:{
         type : String
     },
-    greatestAcheivement:{
+    greatestAchievement:{
         type : String
     },
     createdAt: {
