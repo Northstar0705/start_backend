@@ -7,11 +7,16 @@ import passport from 'passport'
 import { connectDB } from './config/database.js'
 import MongoStore from 'connect-mongo'
 import authRouter from './routes/auth.js'
+import adminRouter from './routes/admin.js'
+import mentorRouter from './routes/mentor.js'
 
 const app = express()
 dotenv.config()
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -33,6 +38,8 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/api/auth', authRouter)
+app.use('/api/admin',adminRouter)
+app.use('/api/mentor',mentorRouter)
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
