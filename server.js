@@ -9,6 +9,7 @@ import MongoStore from 'connect-mongo'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import mentorRouter from './routes/mentor.js'
+import conversation from './routes/conversation.js'
 
 const app = express()
 dotenv.config()
@@ -38,8 +39,9 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/api/auth', authRouter)
-app.use('/api/admin',adminRouter)
-app.use('/api/mentor',mentorRouter)
+app.use('/api/admin', adminRouter)
+app.use('/api/mentor', mentorRouter)
+app.use('/api/conversation', conversation)
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
