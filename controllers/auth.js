@@ -36,12 +36,8 @@ export const signIn = async (req, res, next) => {
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid email or passowrd" });
         }
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            role: user.role
-        };
+        req.session.user = user
+        await req.session.save()
         res.status(200).json({ message: "Logged in successfully" });
     } catch (error) {
         console.error(error);
@@ -102,4 +98,14 @@ export const forgotPassword = async (req, res) => {
     } catch (err) {
         res.status(500).json(err)
     }
+}
+
+export const logout = async(req,res,next) =>{
+    req.session.destroy((err)=>{
+        if(err){
+            return res.status(500).json({errorMessage: "Internal server error"})
+        }
+        res.clearCookie(process.env.SESS_NAME)
+        res.status(200).json({message: "Logged out successfully"})
+    })
 }

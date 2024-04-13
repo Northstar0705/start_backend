@@ -14,6 +14,19 @@ export const applyMentor = async (req,res,next)=>{
     }
 }
 
-export const getAllMentors = async () =>{
-    const mentors = await Mentor.find();
+export const getMentors = async (req,res,next) =>{
+    try{
+        const mentors = await Mentor.find()
+        return res.status(200).json(mentors)
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({status:"error",msg:"Internal Server Error"})
+    }
+}
+
+export const getMentor = async (req,res,next) =>{
+    if(!req.session.mentor){
+        return res.status(401).json({status:"error",msg:"Please login first"})
+    }
+    return res.status(200).json(req.session.mentor)
 }

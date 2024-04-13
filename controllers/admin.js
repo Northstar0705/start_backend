@@ -17,7 +17,7 @@ export const adminLogin = async (req, res, next) => {
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Incorrect email or password" });
         }
-        req.session.user = {
+        req.session.admin = {
             id: user._id,
             username: user.username,
             email: user.email,
