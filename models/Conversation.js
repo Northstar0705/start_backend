@@ -1,5 +1,6 @@
 
 import mongoose from 'mongoose'
+
 const ConversationScema = mongoose.Schema(
     {
         members: {
@@ -12,4 +13,4 @@ const ConversationScema = mongoose.Schema(
         timestamps: true
     }
 )
-module.exports = mongoose.model('Conversation', ConversationScema)   
+export default mongoose.model('Conversation', ConversationScema)
