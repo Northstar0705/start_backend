@@ -17,7 +17,7 @@ export const adminLogin = async (req, res, next) => {
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Incorrect email or password" });
         }
-        req.session.user = {
+        req.session.admin = {
             id: user._id,
             username: user.username,
             email: user.email,
@@ -28,6 +28,13 @@ export const adminLogin = async (req, res, next) => {
         console.log(err);
         res.status(500).json({message: "Internal Server Error"});
     }
+}
+
+export const getAdmin = (req, res, next) =>{
+    if(!req.session.admin){
+        return res.status(401).json({message: "Please login first"});
+    }
+    return res.status(200).json(req.session.admin);
 }
 
 export const getUsers = async (req, res, next) => {

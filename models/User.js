@@ -18,6 +18,21 @@ const userSchema = new mongoose.Schema({
         type:String,
         required: true
     },
+    image:{
+        type: String
+    },
+    goal:{
+        type:String
+    },
+    linkedIn:{
+        type:String
+    },
+    twitter:{
+        type:String
+    },
+    location:{
+        type:String
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -32,7 +47,10 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         default: "mentee"
-    }
+    },
+    interests:[{
+        type: String
+    }],
 },{timestamps: true})
 
 export default mongoose.model("User", userSchema);

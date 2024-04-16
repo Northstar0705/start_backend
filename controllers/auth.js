@@ -4,6 +4,7 @@ import otpGenerator from "otp-generator"
 import UserOtp from "../models/UserOtp.js"
 import emailjs from '@emailjs/nodejs';
 import dotenv from 'dotenv'
+import Mentor from "../models/Mentor.js";
 
 dotenv.config()
 
@@ -26,22 +27,30 @@ export const signUp = async (req, res, next) => {
     }
 }
 export const signIn = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, isMentee, isAdmin } = req.body;
     try {
-        const user = await User.findOne({ email });
+        let user;
+        if (!isMentee)
+            user = await Mentor.findOne({ email });
+        else
+            user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid Credentials" });
+        }
+        if (isAdmin && user.role !== "admin") {
+            return res.status(400).json({ message: "You don't have admin access" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid email or passowrd" });
         }
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            role: user.role
-        };
+        if (isAdmin)
+            req.session.admin = user
+        else if (!isMentee)
+            req.session.mentor = user
+        else
+            req.session.user = user
+        await req.session.save()
         res.status(200).json({ message: "Logged in successfully" });
     } catch (error) {
         console.error(error);
@@ -49,7 +58,7 @@ export const signIn = async (req, res, next) => {
     }
 }
 
-export const verifyEmail = async (req,res,next) => {
+export const verifyEmail = async (req, res, next) => {
     const { email } = req.body
     try {
         const user = await User.findOne({ email })
@@ -102,4 +111,14 @@ export const forgotPassword = async (req, res) => {
     } catch (err) {
         res.status(500).json(err)
     }
+}
+
+export const logout = async (req, res, next) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ errorMessage: "Internal server error" })
+        }
+        res.clearCookie(process.env.SESS_NAME)
+        res.status(200).json({ message: "Logged out successfully" })
+    })
 }
