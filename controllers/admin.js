@@ -30,6 +30,13 @@ export const adminLogin = async (req, res, next) => {
     }
 }
 
+export const getAdmin = (req, res, next) =>{
+    if(!req.session.admin){
+        return res.status(401).json({message: "Please login first"});
+    }
+    return res.status(200).json(req.session.admin);
+}
+
 export const getUsers = async (req, res, next) => {
     try{
 
