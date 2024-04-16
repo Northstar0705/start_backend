@@ -10,6 +10,7 @@ import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import mentorRouter from './routes/mentor.js'
 import conversation from './routes/conversation.js'
+import messages from './routes/messages.js'
 
 const app = express()
 dotenv.config()
@@ -42,6 +43,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/mentor', mentorRouter)
 app.use('/api/conversation', conversation)
+app.use('/api/message',messages)
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
