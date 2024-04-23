@@ -3,7 +3,7 @@ import { forgotPassword, logout, signIn, signUp, verifyEmail, verifyOtp } from "
 
 const router = express.Router();
 
-router.post("/register", signUp);
+router.post("/register", signUp, verifyEmail);
 router.post("/login", signIn);
 router.post("/verify-email", verifyEmail);
 router.post("/verify-otp", verifyOtp);

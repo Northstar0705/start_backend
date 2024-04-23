@@ -130,3 +130,13 @@ export const deleteMentor = async (req, res, next) => {
         res.status(500).json({message: "Internal Server Error"});
     }
 }
+
+export const logout = (req,res,next) => {
+    try{
+        req.session.destroy();
+        res.status(200).json({message: "Logged out successfully"});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}

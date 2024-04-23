@@ -18,9 +18,10 @@ export const signUp = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, 12)
 
         const user = new User({ firstName, lastName, email, password: hashedPassword })
-
         await user.save()
-        res.status(201).json({ message: "User created successfully" })
+        req.session.user = user
+        await req.session.save()
+        next()
     } catch (err) {
         console.log(err)
         res.status(500).json(err)
@@ -59,7 +60,7 @@ export const signIn = async (req, res, next) => {
 }
 
 export const verifyEmail = async (req, res, next) => {
-    const { email } = req.body
+    const { email } = req.body || req.session.user
     try {
         const user = await User.findOne({ email })
         if (!user) {
@@ -72,10 +73,10 @@ export const verifyEmail = async (req, res, next) => {
             email: email,
             OTP: otp,
             createdAt: Date.now(),
-            expireAt: Date.now() + 5 * 600000
+            expireAt: Date.now() + 5 * 60000
         })
         await userOtp.save()
-        await emailjs.send(process.env.EMAIL_SERVICE, process.env.EMAIL_TEMPLATE, {
+        await emailjs.send(process.env.EMAIL_SERVICE, req.session.user ? process.env.EMAIL_TEMPLATE2 : process.env.EMAIL_TEMPLATE, {
             to_email: email,
             otp: otp,
             to_name: user.firstName
@@ -87,14 +88,21 @@ export const verifyEmail = async (req, res, next) => {
 }
 
 export const verifyOtp = async (req, res) => {
-    const { email, otp } = req.body
+    let { email, otp } = req.body
+    email = email ? email : req.session.user.email
     try {
         const userOtp = await UserOtp.findOne({ email: email })
         if (Date.now() > userOtp.expireAt) {
-            userOtp.remove()
             return res.status(419).json('Timeout')
         }
-        if (otp === userOtp.OTP) return res.status(200).json({ message: 'verified', userId: userOtp.userId })
+        else if (otp === userOtp.OTP) {
+            const user = await User.findById(req.session.user._id)
+            user.verified = true
+            req.session.user = user
+            await user.save()
+            await req.session.save()
+            return res.status(200).json({ message: 'verified', userId: userOtp.userId })
+        }
         else return res.status(400).json('Invalid OTP')
     } catch (err) {
         res.status(500).json(err)
