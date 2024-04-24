@@ -1,10 +1,12 @@
 import express from "express"
-import { applyMentor, getMentor, getMentors } from "../controllers/mentor.js";
+import { applyMentor, changePassword, getMentor, getMentors, updateMentor } from "../controllers/mentor.js";
 import { verifyMentor } from "../config/verifyUser.js";
 const router = express.Router()
 
-router.post("/apply",verifyMentor,applyMentor);
-router.get("/mentors",verifyMentor,getMentors);
+router.post("/apply",applyMentor);
+router.get("/mentors",getMentors);
 router.get('/',verifyMentor,getMentor);
+router.patch('/changePassword',verifyMentor,changePassword)
+router.patch('/update',verifyMentor,updateMentor)
 
 export default router;

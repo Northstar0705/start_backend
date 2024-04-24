@@ -1,5 +1,5 @@
 import express from "express";
-import { acceptApplication, addAdmin, adminLogin, getAdmin, deleteMentee, deleteMentor, getApplication, getApplications, getUsers, rejectApplication } from "../controllers/admin.js";
+import { acceptApplication, addAdmin, adminLogin, getAdmin, deleteMentee, deleteMentor, getApplication, getApplications, getUsers, rejectApplication, logout } from "../controllers/admin.js";
 import { verifyAdmin } from "../config/verifyUser.js";
 const router = express.Router();
 
@@ -13,4 +13,5 @@ router.delete('/applications/:mentorId',verifyAdmin, rejectApplication);
 router.delete('/mentee/:menteeId',verifyAdmin, deleteMentee);
 router.delete('/mentor/:mentorId',verifyAdmin, deleteMentor);
 router.patch("/addAdmin/:id",verifyAdmin, addAdmin);
+router.post("/log-out", verifyAdmin, logout)
 export default router;
