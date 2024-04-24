@@ -20,5 +20,6 @@ export const verifyMentor = (req,res,next) =>{
     if(!mentor){
         return res.status(401).json({errorMessage: "Please login first"})
     }
+    // console.log(mentor)
     next()
 }
