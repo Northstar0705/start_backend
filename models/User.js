@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema({
     interests:[{
         type: String
     }],
+    mentors:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mentor"
+    }],
 },{timestamps: true})
 
 export default mongoose.model("User", userSchema);

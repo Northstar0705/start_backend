@@ -72,6 +72,10 @@ const mentorSchema = new Schema({
         type: Boolean,
         default: false
     },
+    mentees:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
 },{timestamps:true});
 
 export default mongoose.model("Mentor", mentorSchema);

@@ -1,5 +1,4 @@
 export const verifyMentee = (req,res,next) =>{
-    console.log(req.session)
     const {user} = req.session
     if(!user){
         return res.status(401).json({errorMessage: "Please login first"})
@@ -20,6 +19,5 @@ export const verifyMentor = (req,res,next) =>{
     if(!mentor){
         return res.status(401).json({errorMessage: "Please login first"})
     }
-    // console.log(mentor)
     next()
 }

@@ -89,3 +89,20 @@ export const updateMentee = async(req, res, next) =>{
         return res.status(500).json({errorMessage:"Internal server error"})
     }
 }
+
+export const addMentor = async(req,res,next) =>{
+    const {mentorId} = req.body;
+    try{
+        const user = await User.findById(req.session.user._id)
+        const mentor = await Mentor.findById(mentorId)
+        mentor.mentees.push(user._id)
+        await mentor.save()
+        user.mentors.push(mentorId)
+        await user.save()
+        req.session.user = user
+        await req.session.save()
+        return res.status(200).json({message:"Mentor added successfully"})
+    }catch(err){
+        return res.status(500).json({errorMessage:"Internal server error"})
+    }
+}

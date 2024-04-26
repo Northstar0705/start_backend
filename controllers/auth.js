@@ -52,7 +52,7 @@ export const signIn = async (req, res, next) => {
         else
             req.session.user = user
         await req.session.save()
-        res.status(200).json({ message: "Logged in successfully" });
+        res.status(200).json({ message: "Logged in successfully", user: user });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
